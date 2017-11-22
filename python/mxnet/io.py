@@ -460,7 +460,7 @@ class PrefetchingIter(DataIter):
         return self.current_batch.pad
 
 def _init_data(data, allow_empty, default_name):
-    """Convert data into canonical form."""
+    """Convert data into canonical form. 依教规的；权威的；牧师的"""
     assert (data is not None) or allow_empty
     if data is None:
         data = []
@@ -569,7 +569,7 @@ class NDArrayIter(DataIter):
     data_name : str, optional
         The data name.
     label_name : str, optional
-        The label name.
+        The label name. 标签名字为softmax_label.这里注意，提供的名字必须与搭建网络时变量中的名字对应，不然会报错。
     """
     def __init__(self, data, label=None, batch_size=1, shuffle=False,
                  last_batch_handle='pad', data_name='data',
