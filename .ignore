@@ -1,0 +1,6 @@
+*.log
+smd_hpi/examples/bssd/*.log
+smd_hpi/examples/bssd/model
+smd_hpi/examples/bssd/data/*
+smd_hpi/examples/bssd/*.sh
+
