@@ -33,14 +33,14 @@ def _load_model(args, rank=0):
     logging.info('Loaded model %s_%04d.params', model_prefix, args.load_epoch)
     return (sym, arg_params, aux_params)
 
-def _save_model(args, rank=0):
+def _save_model(args, rank=0, period=1):
     if args.model_prefix is None:
         return None
     dst_dir = os.path.dirname(args.model_prefix)
     if not os.path.isdir(dst_dir):
         os.mkdir(dst_dir)
     return mx.callback.do_checkpoint(args.model_prefix if rank == 0 else "%s-%d" % (
-        args.model_prefix, rank))
+        args.model_prefix, rank), period)
 
 def add_fit_args(parser):
     """
@@ -74,13 +74,13 @@ def add_fit_args(parser):
                        help='the batch size')
     train.add_argument('--disp-batches', type=int, default=20,
                        help='show progress for every n batches')
-    train.add_argument('--model-prefix', type=str,
+    train.add_argument('--model-prefix', type=str, dest="model_prefix",
                        help='model prefix')
     parser.add_argument('--monitor', dest='monitor', type=int, default=0,
                         help='log network parameters every N iters if larger than 0')
     train.add_argument('--load-epoch', type=int,
                        help='load the model on an epoch using the model-load-prefix')
-    train.add_argument('--top-k', type=int, default=0,
+    train.add_argument('--top-k', type=int, default=5,
                        help='report the top-k accuracy. 0 means no report.')
     train.add_argument('--test-io', type=int, default=0,
                        help='1 means test reading speed without training')
@@ -132,7 +132,7 @@ def fit(args, network, data_loader, **kwargs):
         logging.info("Freezed parameters: [" + ','.join(fixed_param_names) + ']')
 
     # save model
-    checkpoint = _save_model(args, kv.rank)
+    checkpoint = _save_model(args, kv.rank, 1)
 
     # devices for training
     devs = mx.cpu() if args.gpus is None or args.gpus is '' else [

@@ -23,7 +23,7 @@ def set_param_update(epoch=79):
 
 def main():
     parser = argparse.ArgumentParser(description='Parse mxnet output log')
-    parser.add_argument('--logfile', type=str, default="train_ssd300_bak.log",
+    parser.add_argument('--logfile', type=str, default="train_ssd300_1.log",
                         help = 'the log file for parsing')
     parser.add_argument('--format', type=str, default='none',
                         choices = ['markdown', 'none'],
@@ -120,7 +120,7 @@ def valid_info_parser(args, step=10, verbose=False):
     # 设置坐标范围
     plt.ylim((0.0, 1.0))
     # 设置坐标显示的信息
-    plt.xticks([y for y in range(0, 120, 10)])
+    plt.xticks([y for y in range(0, 150, 10)])
     plt.yticks([float(i)/10 for i in xrange(1, 11)])
     # 图例显示
     plt.legend()
@@ -182,7 +182,7 @@ def train_info_parser(args, verbose=False):
     # 设置坐标范围
     plt.ylim((0.0, 1.0))
     # 设置坐标显示的信息
-    plt.xticks([y for y in range(0, 120, 10)])
+    plt.xticks([y for y in range(0, 150, 10)])
     plt.yticks([float(i)/10 for i in xrange(1, 11)])
     # 图例显示
     plt.legend()

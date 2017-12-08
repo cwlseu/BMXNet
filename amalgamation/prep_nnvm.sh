@@ -2,7 +2,7 @@
 DMLC_CORE=$(pwd)/../dmlc-core
 cd ../nnvm/amalgamation
 make clean
-make DMLC_CORE_PATH=$DMLC_CORE nnvm.d ANDROID=$1 OPENMP=$2
+make DMLC_CORE_PATH=$DMLC_CORE nnvm.d
 cp nnvm.d ../../amalgamation/
 echo '#define MSHADOW_FORCE_STREAM
 

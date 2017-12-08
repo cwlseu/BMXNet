@@ -7,11 +7,13 @@ from common.util import download_file
 import mxnet as mx
 
 def download_cifar10():
-    data_dir="data"
+    data_dir="/home/limin/Repo/BMXNet/data"
     fnames = (os.path.join(data_dir, "cifar10_train.rec"),
               os.path.join(data_dir, "cifar10_val.rec"))
-    download_file('http://data.mxnet.io/data/cifar10/cifar10_val.rec', fnames[1])
-    download_file('http://data.mxnet.io/data/cifar10/cifar10_train.rec', fnames[0])
+    if not os.path.exists(fnames[1]):
+        download_file('http://data.mxnet.io/data/cifar10/cifar10_val.rec', fnames[1])
+    if not os.path.exists(fnames[0]):
+        download_file('http://data.mxnet.io/data/cifar10/cifar10_train.rec', fnames[0])
     return fnames
 
 if __name__ == '__main__':
@@ -39,7 +41,8 @@ if __name__ == '__main__':
         image_shape    = '3,32,32',
         # train
         batch_size     = 128,
-        num_epochs     = 300,
+        num_epochs     = 100,
+        model_prefix   = os.path.join(data_dir,'../smd_hpi/examples/binary-imagenet1k/model/cifar10/cifar10_binary'),
         lr_step_epochs = '50,200,250',
         optimizer        = 'Adam',
         disp_batches     = 100,

@@ -1,4 +1,22 @@
 #!/usr/bin/env bash
+
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
 #
 # Execute command within a docker container
 #
@@ -37,6 +55,12 @@ if [[ "$1" == "-it" ]]; then
     shift 1
 fi
 
+if [[ "$1" == "--dockerbinary" ]]; then
+    DOCKER_BINARY="$2"
+    echo "Using custom Docker Engine: ${DOCKER_BINARY}"
+    shift 2
+fi
+
 if [[ ! -f "${DOCKERFILE_PATH}" ]]; then
     echo "Invalid Dockerfile path: \"${DOCKERFILE_PATH}\""
     exit 1
@@ -55,11 +79,15 @@ if [ "$#" -lt 1 ] || [ ! -e "${SCRIPT_DIR}/Dockerfile.${CONTAINER_TYPE}" ]; then
       exit 1
 fi
 
-# Use nvidia-docker if the container is GPU.
-if [[ "${CONTAINER_TYPE}" == *"gpu"* ]]; then
-    DOCKER_BINARY="nvidia-docker"
-else
-    DOCKER_BINARY="docker"
+# Only set docker binary automatically if it has not been specified
+if [[ -z "${DOCKER_BINARY}" ]]; then
+    # Use nvidia-docker if the container is GPU.
+    if [[ "${CONTAINER_TYPE}" == *"gpu"* ]]; then
+        DOCKER_BINARY="nvidia-docker"
+    else
+        DOCKER_BINARY="docker"
+    fi
+    echo "Automatically assuming ${DOCKER_BINARY} as docker binary"
 fi
 
 # Helper function to traverse directories up until given file is found.
@@ -129,6 +157,7 @@ ${DOCKER_BINARY} run --rm --pid=host \
     -e "CI_BUILD_UID=$(id -u)" \
     -e "CI_BUILD_GROUP=$(id -g -n)" \
     -e "CI_BUILD_GID=$(id -g)" \
+    -e "CUDA_ARCH=-gencode arch=compute_52,code=[sm_52,compute_52] --fatbin-options -compress-all" \
     ${CI_DOCKER_EXTRA_PARAMS[@]} \
     ${DOCKER_IMG_NAME} \
     ${PRE_COMMAND} \

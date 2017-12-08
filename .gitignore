@@ -60,6 +60,7 @@ tracker
 __pycache__
 *.pkl
 *.params
+*.states
 *.json
 *.d
 build
@@ -127,22 +128,6 @@ lib
 
 # Mac OS X
 .DS_Store
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-*.xcworkspace
-!default.xcworkspace
-xcuserdata
-profile
-*.moved-aside
-DerivedData
-.idea/
 
 #Notebook Automated Test
 !tests/nightly/test_tutorial_config.txt
@@ -162,3 +147,10 @@ bld
 target
 
 bin/im2rec
+
+model/
+
+# generated function signature for IDE auto-complete
+python/mxnet/symbol/gen_*
+python/mxnet/ndarray/gen_*
+python/.eggs
